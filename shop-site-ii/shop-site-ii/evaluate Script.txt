@@ -1,0 +1,75 @@
+#!/bin/bash
+cp -r /usr/local/customlibs/test .
+mkdir -p test/tests
+cp app.spec.ts test/tests/app.spec.ts
+
+url=$(grep -oP '(?<=<url value=")[^"]*(?=")' url.xml)
+if [ -z "$url" ]; then
+    echo "Failed to extract URL from url.xml"
+    exit 1
+fi
+echo "Extracted URL: $url"
+
+cat > vpl_execution << EOF
+#!/bin/bash
+cd test/tests
+
+FORCE_COLOR=0 PLAYWRIGHT_BROWSERS_PATH=/usr/local/customlibs/.cache/ms-playwright/ BASE_URL=$url \
+npx playwright test app.spec.ts --reporter=list > raw_output.txt 2>&1
+
+tr -cd '\11\12\15\40-\176' < raw_output.txt > output.txt
+rm raw_output.txt
+
+cat output.txt
+
+totaltests=\$(grep -oP '(?<=Running )[0-9]+' output.txt)
+testcasespassed=\$(grep -oP '(^\s*[0-9]+(?=\spassed))|(?<=\s)[0-9]+(?=\spassed)' output.txt)
+
+grade=0
+if [ -n "\$totaltests" ] && [ -n "\$testcasespassed" ]; then
+    grade=\$((100 * testcasespassed / totaltests))
+fi
+
+echo "Grade :=>>\$grade"
+
+cd ../../
+rm -rf test
+EOF
+
+chmod +x vpl_execution
+
+
+
+
+
+======================================================
+
+#!/bin/bash
+cp -r /usr/local/customlibs/test .
+cp app.spec.ts test/tests/app.spec.ts
+#cp playwright.config.js test/playwright.config.js
+url=$(grep -oP '(?<=<url value=")[^"]*(?=")' url.xml)
+
+if [ -z "$url" ]; then
+    echo "Failed to extract URL from url.xml"
+    exit 1
+fi
+currentwd=$(pwd)
+#export PLAYWRIGHT_BROWSERS_PATH=/usr/local/customlibs/.cache/ms-playwright
+#echo $PLAYWRIGHT_BROWSERS_PATH
+echo "Extracted URL: $url"
+#echo "cd test/tests && PLAYWRIGHT_BROWSERS_PATH=/usr/local/customlibs/.cache/ms-playwright/ BASE_URL=$url npx playwright test app.spec.ts --reporter=line" > vpl_execution
+echo "echo 'Please wait ....., Running  Tests'" > vpl_execution
+echo "cd test/tests && PLAYWRIGHT_BROWSERS_PATH=/usr/local/customlibs/.cache/ms-playwright/ BASE_URL=$url npx playwright test app.spec.ts  > output.txt" >> vpl_execution
+#echo "PLAYWRIGHT_BROWSERS_PATH=/usr/local/customlibs/.cache/ms-playwright/ pytest test_script.py --browser chromium > output.txt" > vpl_execution
+echo "cat output.txt" >> vpl_execution
+#echo "rm -rf test" >> vpl_execution
+#echo "export BASE_URL=$url" > vpl_execution
+#echo "BASE_URL=$url PLAYWRIGHT_BROWSERS_PATH=/usr/local/customlibs/.cache/ms-playwright/ pytest test_script.py --browser chromium -q --disable-warnings" >> vpl_execution
+echo "cd ../../ && rm -rf test" >> vpl_execution
+chmod +x vpl_execution
+
+
+
+
+
