@@ -1,4 +1,4 @@
-# 🛒 Full Express.js + MongoDB Shopping Cart Backend
+ # 🛒 Full Express.js + MongoDB Shopping Cart Backend
 
 This project is a **complete backend for a shopping cart system**, built using **Node.js**, **Express**, and **MongoDB (Mongoose)**. It handles:
 
@@ -54,6 +54,12 @@ frontend/
 ---
 
 ## 🔧 Installation & Setup
+
+I HAS NOT PROVIDED node_modules to install it before run this commands in your terminal manually 
+-- cd shop-site-ii
+-- cd BackEnd 
+then this works proper and it executes
+
 
 ### 1️⃣ **Clone the repository**
 
