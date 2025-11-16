@@ -64,7 +64,7 @@ then this works proper and it executes
 ### 1️⃣ **Clone the repository**
 
 ```
-git clone [<your-repo-link>](https://github.com/kannah-coder/Shop-site-BACKEND_JS.git)
+git clone (https://github.com/kannah-coder/Shop-site-BACKEND_JS.git)
  
 ```
 
